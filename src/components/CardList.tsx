@@ -15,7 +15,7 @@ interface CardsProps {
   cards?: Card[];
 }
 
-export function CardList({ cards }: CardsProps): JSX.Element {
+export function CardList({ cards = [] }: CardsProps): JSX.Element {
   // TODO MODAL USEDISCLOSURE
 
   // TODO SELECTED IMAGE URL STATE
@@ -25,7 +25,11 @@ export function CardList({ cards }: CardsProps): JSX.Element {
   return (
     <>
       {/* TODO CARD GRID */}
-
+      <SimpleGrid columns={3} gap="40px">
+        {cards.map(card => (
+          <Card key={card.id} data={card} viewImage={() => false} />
+        ))}
+      </SimpleGrid>
       {/* TODO MODALVIEWIMAGE */}
     </>
   );

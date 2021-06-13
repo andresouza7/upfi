@@ -76,7 +76,7 @@ export function FormAddImage({ closeModal }: FormAddImageProps): JSX.Element {
     {
       // TODO ONSUCCESS MUTATION
       onSuccess: () => {
-        queryClient.invalidateQueries('test');
+        queryClient.invalidateQueries('images');
       },
     }
   );
