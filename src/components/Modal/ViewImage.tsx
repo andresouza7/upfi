@@ -27,7 +27,9 @@ export function ModalViewImage({
   function handleImageSize(
     e: React.SyntheticEvent<HTMLImageElement, Event>
   ): void {
-    const img = e.currentTarget;
+    const img = e?.currentTarget;
+    if (!img) return;
+
     setShouldAdjustView(img.width > 900 || img.height > 600);
     setIsWidthGreater(img.width > img.height);
   }

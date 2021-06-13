@@ -21,30 +21,28 @@ export default function Home(): JSX.Element {
     'images',
     // TODO AXIOS REQUEST WITH PARAM
     async ({ pageParam = null }) => {
-      return api.get('/images', {
+      // eslint-disable-next-line no-shadow
+      const { data } = await api.get('/api/images', {
         params: { after: pageParam },
       });
+      return data;
     },
     // TODO GET AND RETURN NEXT PAGE PARAM
     {
-      getNextPageParam: lastPage => lastPage.data.after,
+      getNextPageParam: lastPage => lastPage.after ?? null,
     }
   );
 
   const formattedData = useMemo(() => {
     // TODO FORMAT AND FLAT DATA ARRAY
-    return data?.pages.map(pageData => pageData.data.data).flat();
+    return data?.pages.flatMap(pageData => pageData.data);
   }, [data]);
 
   // TODO RENDER LOADING SCREEN
-  if (isLoading) {
-    return <Loading />;
-  }
+  if (isLoading) return <Loading />;
 
   // TODO RENDER ERROR SCREEN
-  if (isError) {
-    return <Error />;
-  }
+  if (isError) return <Error />;
 
   return (
     <>
