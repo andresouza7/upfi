@@ -17,6 +17,8 @@ interface APIRequestProps {
   url: string;
 }
 
+const MAX_IMAGE_SIZE = 10; // in Megabytes
+
 export function FormAddImage({ closeModal }: FormAddImageProps): JSX.Element {
   const [file, setFile] = useState<File>();
   const [imageUrl, setImageUrl] = useState('');
@@ -28,7 +30,6 @@ export function FormAddImage({ closeModal }: FormAddImageProps): JSX.Element {
   ): Promise<boolean | void> {
     const f = e.target.files[0];
     setFile(f);
-    console.log(e.target.files[0]);
   }
 
   const formValidations = {
@@ -38,8 +39,10 @@ export function FormAddImage({ closeModal }: FormAddImageProps): JSX.Element {
       validate: {
         lessThan10MB: () => {
           const sizeInMB = file.size / (1000 * 1000); // bytes to MB
-          const isSmall = sizeInMB < 1;
-          return isSmall || 'O arquivo deve ser menor que 1MB';
+          const isSizeAllowed = sizeInMB < MAX_IMAGE_SIZE;
+          return (
+            isSizeAllowed || `O arquivo deve ser menor que ${MAX_IMAGE_SIZE}MB`
+          );
         },
         acceptedFormats: () => {
           const pattern = /(jpeg)|(png)|(gif)/gi;
