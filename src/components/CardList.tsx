@@ -12,7 +12,7 @@ interface Card {
 }
 
 interface CardsProps {
-  cards: Card[];
+  cards?: Card[];
 }
 
 export function CardList({ cards }: CardsProps): JSX.Element {
