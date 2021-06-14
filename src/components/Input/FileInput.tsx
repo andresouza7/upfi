@@ -107,6 +107,7 @@ const FileInputBase: ForwardRefRenderFunction<
             config
           );
 
+          console.log(response.data)
           setImageUrl(response.data.data.url);
           setLocalImageUrl(URL.createObjectURL(event.target.files[0]));
         } catch (err) {

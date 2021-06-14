@@ -1,9 +1,13 @@
-import { Box, Flex, Button, useDisclosure, Image } from '@chakra-ui/react';
+import { Box, Flex, Button, Image } from '@chakra-ui/react';
 
-import { ModalAddImage } from './Modal/AddImage';
+import { ModalSaveImage } from './Modal/SaveImage';
+import { FormSaveImage } from './Form/FormSaveImage';
+import { usePost } from '../contexts/PostContext';
 
 export function Header(): JSX.Element {
-  const { onOpen, isOpen, onClose } = useDisclosure();
+  const {
+    newPostModal: { isOpen, onClose, onOpen },
+  } = usePost();
 
   return (
     <>
@@ -21,7 +25,15 @@ export function Header(): JSX.Element {
         </Flex>
       </Box>
 
-      <ModalAddImage isOpen={isOpen} onClose={onClose} />
+      <ModalSaveImage
+        isOpen={isOpen}
+        onClose={onClose}
+        title="Nova Imagem"
+        size="xl"
+        padding="8"
+      >
+        <FormSaveImage closeModal={onClose} />
+      </ModalSaveImage>
     </>
   );
 }

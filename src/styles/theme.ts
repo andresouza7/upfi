@@ -31,6 +31,17 @@ export const theme = extendTheme({
         colorScheme: 'orange',
       },
     },
+    Menu: {
+      parts: ['menu', 'item', 'groupTitle', 'list'],
+      baseStyle: {
+        item: {
+          color: 'black',
+        },
+        groupTitle: {
+          color: 'black',
+        },
+      },
+    },
   },
   styles: {
     global: {

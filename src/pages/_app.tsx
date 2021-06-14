@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { theme } from '../styles/theme';
+import { PostProvider } from '../contexts/PostContext';
 
 function MyApp({ Component, pageProps }: AppProps): JSX.Element {
   const queryClient = new QueryClient();
@@ -11,8 +12,10 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
   return (
     <ChakraProvider resetCSS theme={theme}>
       <QueryClientProvider client={queryClient}>
-        <ReactQueryDevtools />
-        <Component {...pageProps} />
+        <PostProvider>
+          <ReactQueryDevtools />
+          <Component {...pageProps} />
+        </PostProvider>
       </QueryClientProvider>
     </ChakraProvider>
   );

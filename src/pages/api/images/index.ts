@@ -1,8 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import fauna from 'faunadb';
 
-const { query } = fauna;
-const client = new fauna.Client({ secret: process.env.FAUNA_API_KEY });
+import { fauna, q } from '../../../services/faunadb';
 
 interface ImagesQueryResponse {
   after?: {
@@ -28,9 +26,9 @@ export default async function handler(
   if (req.method === 'POST') {
     const { url, title, description } = req.body;
 
-    return client
+    return fauna
       .query(
-        query.Create(query.Collection('images'), {
+        q.Create(q.Collection('images'), {
           data: {
             title,
             description,
@@ -50,21 +48,19 @@ export default async function handler(
 
   if (req.method === 'GET') {
     const { after } = req.query;
-    console.log(after);
 
     const queryOptions = {
-      size: 2, // 6
-      ...(after && { after: query.Ref(query.Collection('images'), after) }),
+      size: 6, // 6
+      ...(after && { after: q.Ref(q.Collection('images'), after) }),
     };
 
-    return client
+    const allImages = q.Documents(q.Collection('images'));
+
+    return fauna
       .query<ImagesQueryResponse>(
-        query.Map(
-          query.Paginate(
-            query.Documents(query.Collection('images')),
-            queryOptions
-          ),
-          query.Lambda('X', query.Get(query.Var('X')))
+        q.Map(
+          q.Paginate(allImages, queryOptions),
+          q.Lambda('X', q.Get(q.Var('X')))
         )
       )
       .then(response => {

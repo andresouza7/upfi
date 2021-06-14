@@ -1,25 +1,18 @@
 import { Box, Button, Stack, useToast } from '@chakra-ui/react';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
-import { useMutation, useQueryClient } from 'react-query';
 
-import { api } from '../../services/api';
 import { FileInput } from '../Input/FileInput';
 import { TextInput } from '../Input/TextInput';
+import { usePost } from '../../contexts/PostContext';
 
-interface FormAddImageProps {
+interface FormSaveImageProps {
   closeModal: () => void;
-}
-
-interface APIRequestProps {
-  title: string;
-  description: string;
-  url: string;
 }
 
 const MAX_IMAGE_SIZE = 10; // in Megabytes
 
-export function FormAddImage({ closeModal }: FormAddImageProps): JSX.Element {
+export function FormSaveImage({ closeModal }: FormSaveImageProps): JSX.Element {
   const [file, setFile] = useState<File>();
   const [imageUrl, setImageUrl] = useState('');
   const [localImageUrl, setLocalImageUrl] = useState('');
@@ -66,23 +59,7 @@ export function FormAddImage({ closeModal }: FormAddImageProps): JSX.Element {
     },
   };
 
-  const queryClient = useQueryClient();
-  const mutation = useMutation(
-    // TODO MUTATION API POST REQUEST,
-    async ({ title, description, url }: APIRequestProps) => {
-      await api.post('/images', {
-        title,
-        description,
-        url,
-      });
-    },
-    {
-      // TODO ONSUCCESS MUTATION
-      onSuccess: () => {
-        queryClient.invalidateQueries('images');
-      },
-    }
-  );
+  const { handleNewPost } = usePost();
 
   const { register, handleSubmit, reset, formState, setError, trigger } =
     useForm();
@@ -100,13 +77,13 @@ export function FormAddImage({ closeModal }: FormAddImageProps): JSX.Element {
         return;
       }
       // TODO EXECUTE ASYNC MUTATION
-      await mutation.mutateAsync({
+      await handleNewPost({
         title: data.title as string,
         description: data.description as string,
         url: imageUrl,
       });
+
       // TODO SHOW SUCCESS TOAST
-      console.log(data);
       toast({
         title: 'Imagem cadastrada',
         description: 'Sua imagem foi cadastrada com sucesso.',
